@@ -375,7 +375,7 @@ function Faq() {
       <p className="text-center text-sm font-semibold uppercase tracking-widest text-primary">Perguntas Frequentes</p>
       <h2 className="mt-2 text-center text-3xl font-bold">Tire suas dúvidas</h2>
       <Accordion type="single" collapsible className="mt-8">
-        {qs.map(([q, a = ""]) => (
+        {qs.map(([q = "", a = ""]) => (
           <AccordionItem key={q} value={q}>
             <AccordionTrigger className="text-left">{q}</AccordionTrigger>
             <AccordionContent className="text-muted-foreground">{a}</AccordionContent>
