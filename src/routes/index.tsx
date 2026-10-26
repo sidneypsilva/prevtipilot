@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import {
   BUSINESS_TYPES, CLOUD_BACKUP_PRICE, MAX_PCS, MIN_PCS, PRICE_PER_PC, SERVER_PRICE,
   calculateTotal, formatBRL, maskPhone, planItems, suggestPlan, waLink,
@@ -273,11 +274,29 @@ function Simulator() {
               <div className="mt-2 flex justify-between text-xs text-muted-foreground"><span>1</span><span>30</span></div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4 has-[:checked]:border-primary">
+              <label
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).closest('[role="switch"]')) return;
+                  setHasServer((v) => !v);
+                }}
+                className={cn(
+                  "flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4",
+                  hasServer && "border-primary",
+                )}
+              >
                 <div className="flex gap-3"><HardDrive className="h-5 w-5 text-primary" /><div><p className="flex items-center gap-1.5 font-medium">Servidor Local / NAS de Arquivos<InfoTip label="Servidor Local / NAS de Arquivos" text="Computador central ou aparelho de armazenamento que fica na rede da sua empresa, guardando os sistemas (prontuário, ERP, banco de dados) e os arquivos compartilhados. Monitoramos discos, memória, permissões e temperatura." /></p><p className="text-xs text-muted-foreground">+ {formatBRL(SERVER_PRICE)}/mês</p></div></div>
                 <Switch checked={hasServer} onCheckedChange={setHasServer} />
               </label>
-              <label className="flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4">
+              <label
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).closest('[role="switch"]')) return;
+                  setHasCloudBackup((v) => !v);
+                }}
+                className={cn(
+                  "flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4",
+                  hasCloudBackup && "border-primary",
+                )}
+              >
                 <div className="flex gap-3"><Cloud className="h-5 w-5 text-primary" /><div><p className="flex items-center gap-1.5 font-medium">Backup em Nuvem redundante<InfoTip label="Backup em Nuvem redundante" text="Cópias diárias e criptografadas dos seus dados guardadas em servidores seguros fora da empresa, em mais de um lugar ao mesmo tempo. Se o computador queimar, for roubado ou sofrer ransomware, você restaura tudo rapidamente." /></p><p className="text-xs text-muted-foreground">+ {formatBRL(CLOUD_BACKUP_PRICE)}/mês</p></div></div>
                 <Switch checked={hasCloudBackup} onCheckedChange={setHasCloudBackup} />
               </label>
