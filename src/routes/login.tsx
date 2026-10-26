@@ -7,6 +7,7 @@ import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/login")({
@@ -37,6 +38,7 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPw, setShowPw] = useState(false);
   const [noAdmin, setNoAdmin] = useState(false);
   const [notice, setNotice] = useState("");
 
@@ -62,7 +64,8 @@ function LoginPage() {
       setNotice("Se o e-mail existir, você receberá um link para redefinir a senha.");
       return;
     }
-    const parsed = schema.safeParse({ email, password });
+    const loginEmail = mode === "login" && !email.includes("@") ? `${email.trim().toLowerCase()}@prevti.com.br` : email;
+    const parsed = schema.safeParse({ email: loginEmail, password });
     if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "Dados inválidos"); return; }
     setLoading(true);
     if (mode === "signup") {
@@ -103,13 +106,13 @@ function LoginPage() {
             {notice && <p className="mb-4 rounded-md bg-success/10 p-3 text-sm text-success">{notice}</p>}
             <form onSubmit={submit} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="email">E-mail</Label>
-                <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <Label htmlFor="email">{mode === "login" ? "Usuário ou e-mail" : "E-mail"}</Label>
+                <Input id="email" type={mode === "login" ? "text" : "email"} autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               {mode !== "forgot" && (
                 <div className="space-y-1.5">
                   <Label htmlFor="pw">Senha</Label>
-                  <Input id="pw" type="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <div className="relative"><Input id="pw" className="pr-10" type={showPw ? "text" : "password"} autoComplete={mode === "signup" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} /><button type="button" aria-label={showPw ? "Ocultar senha" : "Mostrar senha"} onClick={() => setShowPw((s) => !s)} className="absolute inset-y-0 right-0 grid w-10 place-items-center text-muted-foreground hover:text-foreground">{showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div>
                 </div>
               )}
               <Button type="submit" className="w-full" disabled={loading}>
