@@ -350,29 +350,35 @@ function Field({ label, error, children }: { label: string; error?: string | und
   );
 }
 
-/** Discreet help icon that explains a simulator option in a tooltip (hover, focus or tap). */
+/** Discreet help icon that explains a simulator option on hover, focus or tap. */
 function InfoTip({ label, text }: { label: string; text: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <Tooltip open={open} onOpenChange={setOpen}>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          aria-label={`O que é ${label}?`}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setOpen((o) => !o);
-          }}
-          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          <Info className="h-3.5 w-3.5" />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="top" sideOffset={8} className="max-w-64 rounded-lg p-3 text-left leading-relaxed">
+    <span className="group/tip relative inline-flex">
+      <button
+        type="button"
+        aria-label={`O que é ${label}?`}
+        aria-expanded={open}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((o) => !o);
+        }}
+        onBlur={() => setOpen(false)}
+        className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      >
+        <Info className="h-3.5 w-3.5" />
+      </button>
+      <span
+        role="tooltip"
+        className={cn(
+          "pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-64 max-w-[78vw] -translate-x-1/2 rounded-lg bg-primary p-3 text-left text-xs font-normal leading-relaxed text-primary-foreground opacity-0 shadow-elegant transition-opacity duration-150 group-hover/tip:opacity-100",
+          open && "opacity-100",
+        )}
+      >
         {text}
-      </TooltipContent>
-    </Tooltip>
+      </span>
+    </span>
   );
 }
 
