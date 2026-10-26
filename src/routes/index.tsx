@@ -271,32 +271,22 @@ function Simulator() {
               <div className="mt-2 flex justify-between text-xs text-muted-foreground"><span>1</span><span>30</span></div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <label
-                onClick={(e) => {
-                  if ((e.target as HTMLElement).closest('[role="switch"]')) return;
-                  setHasServer((v) => !v);
-                }}
-                className={cn(
-                  "flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4",
-                  hasServer && "border-primary",
-                )}
-              >
-                <div className="flex gap-3"><HardDrive className="h-5 w-5 text-primary" /><div><p className="flex items-center gap-1.5 font-medium">Servidor Local / NAS de Arquivos<InfoTip label="Servidor Local / NAS de Arquivos" text="Computador central ou aparelho de armazenamento que fica na rede da sua empresa, guardando os sistemas (prontuário, ERP, banco de dados) e os arquivos compartilhados. Monitoramos discos, memória, permissões e temperatura." /></p><p className="text-xs text-muted-foreground">+ {formatBRL(SERVER_PRICE)}/mês</p></div></div>
-                <Switch checked={hasServer} onCheckedChange={setHasServer} />
-              </label>
-              <label
-                onClick={(e) => {
-                  if ((e.target as HTMLElement).closest('[role="switch"]')) return;
-                  setHasCloudBackup((v) => !v);
-                }}
-                className={cn(
-                  "flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4",
-                  hasCloudBackup && "border-primary",
-                )}
-              >
-                <div className="flex gap-3"><Cloud className="h-5 w-5 text-primary" /><div><p className="flex items-center gap-1.5 font-medium">Backup em Nuvem redundante<InfoTip label="Backup em Nuvem redundante" text="Cópias diárias e criptografadas dos seus dados guardadas em servidores seguros fora da empresa, em mais de um lugar ao mesmo tempo. Se o computador queimar, for roubado ou sofrer ransomware, você restaura tudo rapidamente." /></p><p className="text-xs text-muted-foreground">+ {formatBRL(CLOUD_BACKUP_PRICE)}/mês</p></div></div>
-                <Switch checked={hasCloudBackup} onCheckedChange={setHasCloudBackup} />
-              </label>
+              <OptionCard
+                icon={HardDrive}
+                title="Servidor Local / NAS de Arquivos"
+                price={SERVER_PRICE}
+                checked={hasServer}
+                onCheckedChange={setHasServer}
+                help="É um computador central ou aparelho de armazenamento que fica na rede da sua empresa. Nele ficam os sistemas (prontuário, ERP, banco de dados) e os arquivos que a equipe compartilha. Monitoramos discos, memória, permissões e temperatura desse equipamento."
+              />
+              <OptionCard
+                icon={Cloud}
+                title="Backup em Nuvem redundante"
+                price={CLOUD_BACKUP_PRICE}
+                checked={hasCloudBackup}
+                onCheckedChange={setHasCloudBackup}
+                help="Rotina automática que envia cópias diárias e criptografadas dos seus dados para servidores seguros fora da empresa, guardados em mais de um lugar ao mesmo tempo. Se o computador queimar, for roubado ou sofrer ransomware, você restaura tudo rapidamente."
+              />
             </div>
             <form onSubmit={submit} className="grid gap-4 border-t border-border pt-6 sm:grid-cols-2" noValidate>
               <Field label="Seu nome" error={errors.contact_name}>
@@ -350,35 +340,66 @@ function Field({ label, error, children }: { label: string; error?: string | und
   );
 }
 
-/** Discreet help icon that explains a simulator option on hover, focus or tap. */
-function InfoTip({ label, text }: { label: string; text: string }) {
+/** Simulator option card: the whole card selects it, the help icon reveals a short explanation. */
+function OptionCard({
+  icon: I, title, price, checked, onCheckedChange, help,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  price: number;
+  checked: boolean;
+  onCheckedChange: (v: boolean) => void;
+  help: string;
+}) {
   const [open, setOpen] = useState(false);
   return (
-    <span className="group/tip relative inline-flex">
-      <button
-        type="button"
-        aria-label={`O que é ${label}?`}
-        aria-expanded={open}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setOpen((o) => !o);
-        }}
-        onBlur={() => setOpen(false)}
-        className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-      >
-        <Info className="h-3.5 w-3.5" />
-      </button>
-      <span
-        role="tooltip"
-        className={cn(
-          "pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-64 max-w-[78vw] -translate-x-1/2 rounded-lg bg-primary p-3 text-left text-xs font-normal leading-relaxed text-primary-foreground opacity-0 shadow-elegant transition-opacity duration-150 group-hover/tip:opacity-100",
-          open && "opacity-100",
-        )}
-      >
-        {text}
-      </span>
-    </span>
+    <label
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest('[role="switch"]')) return;
+        onCheckedChange(!checked);
+      }}
+      className={cn(
+        "flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4",
+        checked && "border-primary",
+      )}
+    >
+      <div className="flex gap-3">
+        <I className="h-5 w-5 text-primary" />
+        <div>
+          <p className="flex items-center gap-1.5 font-medium">
+            {title}
+            <button
+              type="button"
+              title="Ver explicação"
+              aria-label={`O que é ${title}?`}
+              aria-expanded={open}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen((o) => !o);
+              }}
+              className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              <Info className="h-3.5 w-3.5" />
+            </button>
+          </p>
+          <p className="text-xs text-muted-foreground">+ {formatBRL(price)}/mês</p>
+          {open && (
+            <p
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen(false);
+              }}
+              className="mt-2 border-t border-border/60 pt-2 text-xs leading-relaxed text-muted-foreground"
+            >
+              {help}
+            </p>
+          )}
+        </div>
+      </div>
+      <Switch checked={checked} onCheckedChange={onCheckedChange} />
+    </label>
   );
 }
 
