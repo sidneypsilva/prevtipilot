@@ -201,7 +201,7 @@ function Simulator() {
   const [hasServer, setHasServer] = useState(false);
   const [hasCloudBackup, setHasCloudBackup] = useState(false);
   const [form, setForm] = useState({ contact_name: "", company_name: "", whatsapp: "", business_type: "" });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<"contact_name" | "company_name" | "whatsapp" | "business_type", string>>>({});
   const [loading, setLoading] = useState(false);
 
   const input = { pcCount, hasServer, hasCloudBackup };
@@ -215,7 +215,7 @@ function Simulator() {
     if (!parsed.success) {
       const errs: Record<string, string> = {};
       parsed.error.issues.forEach((i) => (errs[i.path[0] as string] = i.message));
-      setErrors(errs);
+      setErrors(errs as typeof errors);
       return;
     }
     setErrors({});
@@ -266,7 +266,7 @@ function Simulator() {
                   <Button type="button" variant="outline" size="icon" className="h-8 w-8" onClick={() => setPcCount((c) => Math.min(MAX_PCS, c + 1))}>+</Button>
                 </div>
               </div>
-              <Slider className="mt-5" min={MIN_PCS} max={MAX_PCS} step={1} value={[pcCount]} onValueChange={(v) => setPcCount(v[0])} />
+              <Slider className="mt-5" min={MIN_PCS} max={MAX_PCS} step={1} value={[pcCount]} onValueChange={(v) => setPcCount(v[0] ?? MIN_PCS)} />
               <div className="mt-2 flex justify-between text-xs text-muted-foreground"><span>1</span><span>30</span></div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -321,7 +321,7 @@ function Simulator() {
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
       <Label>{label}</Label>
@@ -375,7 +375,7 @@ function Faq() {
       <p className="text-center text-sm font-semibold uppercase tracking-widest text-primary">Perguntas Frequentes</p>
       <h2 className="mt-2 text-center text-3xl font-bold">Tire suas dúvidas</h2>
       <Accordion type="single" collapsible className="mt-8">
-        {qs.map(([q, a]) => (
+        {qs.map(([q, a = ""]) => (
           <AccordionItem key={q} value={q}>
             <AccordionTrigger className="text-left">{q}</AccordionTrigger>
             <AccordionContent className="text-muted-foreground">{a}</AccordionContent>

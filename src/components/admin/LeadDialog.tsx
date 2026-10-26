@@ -42,7 +42,7 @@ export function LeadDialog({ open, onOpenChange, lead }: { open: boolean; onOpen
   const save = useMutation({
     mutationFn: async () => {
       const p = schema.safeParse(form);
-      if (!p.success) throw new Error(p.error.issues[0].message);
+      if (!p.success) throw new Error(p.error.issues[0]?.message ?? "Dados inválidos");
       const input = { pcCount: form.pc_count, hasServer: form.has_server, hasCloudBackup: form.has_cloud_backup };
       const row = {
         ...form,

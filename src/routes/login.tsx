@@ -52,18 +52,18 @@ function LoginPage() {
     setNotice("");
     if (mode === "forgot") {
       const r = z.string().email().safeParse(email.trim());
-      if (!r.success) return toast.error("E-mail inválido");
+      if (!r.success) { toast.error("E-mail inválido"); return; }
       setLoading(true);
       const { error } = await supabase.auth.resetPasswordForEmail(r.data, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       setLoading(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       setNotice("Se o e-mail existir, você receberá um link para redefinir a senha.");
       return;
     }
     const parsed = schema.safeParse({ email, password });
-    if (!parsed.success) return toast.error(parsed.error.issues[0].message);
+    if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "Dados inválidos"); return; }
     setLoading(true);
     if (mode === "signup") {
       const { data, error } = await supabase.auth.signUp({
@@ -71,7 +71,7 @@ function LoginPage() {
         options: { emailRedirectTo: `${window.location.origin}/admin` },
       });
       setLoading(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       if (!data.session) {
         setNotice("Conta criada! Confirme pelo link enviado ao seu e-mail e depois faça login.");
         setMode("login");
@@ -80,7 +80,7 @@ function LoginPage() {
     }
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
-    if (error) return toast.error("E-mail ou senha incorretos.");
+    if (error) { toast.error("E-mail ou senha incorretos."); return; }
     navigate({ to: "/admin" });
   }
 

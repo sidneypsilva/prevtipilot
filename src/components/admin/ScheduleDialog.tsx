@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { SERVICE_TYPES } from "@/lib/pricing";
 import { leadsQuery } from "@/lib/admin-data";
 
-export function ScheduleDialog({ open, onOpenChange, leadId }: { open: boolean; onOpenChange: (o: boolean) => void; leadId?: string }) {
+export function ScheduleDialog({ open, onOpenChange, leadId }: { open: boolean; onOpenChange: (o: boolean) => void; leadId?: string | undefined }) {
   const qc = useQueryClient();
   const { data: leads = [] } = useQuery(leadsQuery);
   const [form, setForm] = useState({ lead_id: "", scheduled_date: "", scheduled_time: "09:00", service_type: SERVICE_TYPES[0] as string });
