@@ -11,3 +11,4 @@
 
 - Admin access is gated by `public.user_roles` (role `admin`) checked via `has_role()` in RLS; the first account to sign up becomes admin automatically (trigger on auth.users). Why: prevents any self-registered user from reading leads.
 - Pricing/plan rules live in `src/lib/pricing.ts` with tests in `src/lib/pricing.test.ts`. Why: single source for simulator and admin lead values.
+- On the public site, inline click/tap-controlled explanations are used instead of hover-only tooltips. Why: Radix tooltips do not open on touch taps, so hover-only help is unreachable on phones.
