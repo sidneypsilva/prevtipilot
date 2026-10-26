@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import {
   BUSINESS_TYPES, CLOUD_BACKUP_PRICE, MAX_PCS, MIN_PCS, PRICE_PER_PC, SERVER_PRICE,
@@ -204,6 +205,7 @@ function Simulator() {
   const [form, setForm] = useState({ contact_name: "", company_name: "", whatsapp: "", business_type: "" });
   const [errors, setErrors] = useState<Partial<Record<"contact_name" | "company_name" | "whatsapp" | "business_type", string>>>({});
   const [loading, setLoading] = useState(false);
+  const [sentUrl, setSentUrl] = useState<string | null>(null);
 
   const input = { pcCount, hasServer, hasCloudBackup };
   const plan = suggestPlan(input);
@@ -221,8 +223,6 @@ function Simulator() {
     }
     setErrors({});
     setLoading(true);
-    // Open the tab synchronously so popup blockers allow it.
-    const win = window.open("", "_blank");
     try {
       const { error } = await supabase.from("leads").insert({
         ...parsed.data,
@@ -237,15 +237,9 @@ function Simulator() {
       const get = (k: string) => settings?.find((s) => s.key === k)?.value ?? "";
       const msg = `${get("whatsapp_default_message")}\n\nEmpresa: ${parsed.data.company_name}\nContato: ${parsed.data.contact_name}\nSegmento: ${parsed.data.business_type}\nComputadores: ${pcCount}\nServidor/NAS: ${hasServer ? "Sim" : "Não"}\nBackup em nuvem: ${hasCloudBackup ? "Sim" : "Não"}\nPlano sugerido: ${plan} — ${formatBRL(total)}/mês`;
       const url = waLink(get("whatsapp_number") || "5531999999999", msg);
-      if (win) win.location.href = url; else window.location.href = url;
-      toast.success("Simulação enviada!", {
-        description: "Abrimos o WhatsApp para você concluir o agendamento. Se a página não abrir automaticamente, clique no botão abaixo.",
-        action: { label: "Abrir WhatsApp", onClick: () => window.open(url, "_blank") },
-        duration: 20000,
-      });
+      setSentUrl(url);
       setForm({ contact_name: "", company_name: "", whatsapp: "", business_type: "" });
     } catch {
-      win?.close();
       toast.error("Não foi possível enviar sua simulação. Tente novamente.");
     } finally {
       setLoading(false);
@@ -330,6 +324,28 @@ function Simulator() {
           </CardContent>
         </Card>
       </div>
+      <Dialog open={!!sentUrl} onOpenChange={(o) => { if (!o) setSentUrl(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="items-center text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success/10">
+              <CheckCircle2 className="h-8 w-8 text-success" />
+            </div>
+            <DialogTitle className="mt-3 text-2xl">Recebemos sua simulação!</DialogTitle>
+            <DialogDescription className="mt-2 text-base">
+              Em breve entraremos em contato pelo WhatsApp para agendar sua avaliação gratuita.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col gap-2 sm:flex-col">
+            <Button className="w-full bg-success text-success-foreground hover:bg-success/90" onClick={() => window.open(sentUrl ?? "", "_blank")}>
+              <MessageCircle className="mr-2 h-4 w-4" />
+              Falar agora no WhatsApp
+            </Button>
+            <Button variant="outline" className="w-full" onClick={() => setSentUrl(null)}>
+              Continuar no site
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
