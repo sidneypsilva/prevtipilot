@@ -238,7 +238,11 @@ function Simulator() {
       const msg = `${get("whatsapp_default_message")}\n\nEmpresa: ${parsed.data.company_name}\nContato: ${parsed.data.contact_name}\nSegmento: ${parsed.data.business_type}\nComputadores: ${pcCount}\nServidor/NAS: ${hasServer ? "Sim" : "Não"}\nBackup em nuvem: ${hasCloudBackup ? "Sim" : "Não"}\nPlano sugerido: ${plan} — ${formatBRL(total)}/mês`;
       const url = waLink(get("whatsapp_number") || "5531999999999", msg);
       if (win) win.location.href = url; else window.location.href = url;
-      toast.success("Simulação enviada!", { description: "Abrimos o WhatsApp para você concluir o agendamento." });
+      toast.success("Simulação enviada!", {
+        description: "Abrimos o WhatsApp para você concluir o agendamento. Se a página não abrir automaticamente, clique no botão abaixo.",
+        action: { label: "Abrir WhatsApp", onClick: () => window.open(url, "_blank") },
+        duration: 20000,
+      });
       setForm({ contact_name: "", company_name: "", whatsapp: "", business_type: "" });
     } catch {
       win?.close();

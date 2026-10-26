@@ -48,15 +48,14 @@ export function maskPhone(v: string): string {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
-export function waLink(number: string, message: string) {
-  const n = number.replace(/\D/g, "");
-  return `https://wa.me/${n}?text=${encodeURIComponent(message)}`;
-}
-
-/** Converts a Brazilian phone typed by the user into a wa.me number (adds 55 when missing). */
+/** Converts a Brazilian phone into a wa.me number: digits only, with country code 55 when missing. */
 export function toWaNumber(phone: string) {
   const d = phone.replace(/\D/g, "");
   return d.startsWith("55") && d.length > 11 ? d : `55${d}`;
+}
+
+export function waLink(number: string, message: string) {
+  return `https://wa.me/${toWaNumber(number)}?text=${encodeURIComponent(message)}`;
 }
 
 export const BUSINESS_TYPES = [

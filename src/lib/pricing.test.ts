@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculateTotal, suggestPlan } from "./pricing";
+import { calculateTotal, suggestPlan, waLink, toWaNumber } from "./pricing";
 
 describe("pricing", () => {
   it("charges R$50 per computer", () => {
