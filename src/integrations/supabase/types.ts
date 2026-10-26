@@ -14,16 +14,150 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      leads: {
+        Row: {
+          business_type: string | null
+          company_name: string
+          contact_name: string
+          created_at: string | null
+          email: string | null
+          estimated_value: number | null
+          has_cloud_backup: boolean | null
+          has_server: boolean | null
+          id: string
+          pc_count: number | null
+          status: string
+          suggested_plan: string | null
+          technical_notes: string | null
+          whatsapp: string
+        }
+        Insert: {
+          business_type?: string | null
+          company_name: string
+          contact_name: string
+          created_at?: string | null
+          email?: string | null
+          estimated_value?: number | null
+          has_cloud_backup?: boolean | null
+          has_server?: boolean | null
+          id?: string
+          pc_count?: number | null
+          status?: string
+          suggested_plan?: string | null
+          technical_notes?: string | null
+          whatsapp: string
+        }
+        Update: {
+          business_type?: string | null
+          company_name?: string
+          contact_name?: string
+          created_at?: string | null
+          email?: string | null
+          estimated_value?: number | null
+          has_cloud_backup?: boolean | null
+          has_server?: boolean | null
+          id?: string
+          pc_count?: number | null
+          status?: string
+          suggested_plan?: string | null
+          technical_notes?: string | null
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      preventive_schedules: {
+        Row: {
+          created_at: string | null
+          id: string
+          lead_id: string
+          scheduled_date: string
+          scheduled_time: string | null
+          service_type: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          lead_id: string
+          scheduled_date: string
+          scheduled_time?: string | null
+          service_type?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          lead_id?: string
+          scheduled_date?: string
+          scheduled_time?: string | null
+          service_type?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "preventive_schedules_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string | null
+          value: string | null
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_exists: { Args: never; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +284,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
