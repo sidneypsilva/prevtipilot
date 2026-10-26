@@ -20,3 +20,24 @@ describe("pricing", () => {
     expect(suggestPlan({ pcCount: 20, hasServer: false, hasCloudBackup: false })).toBe("Corporate");
   });
 });
+
+describe("whatsapp link", () => {
+  it("adds country code 55 when missing", () => {
+    expect(toWaNumber("(31) 99999-9999")).toBe("5531999999999");
+  });
+  it("keeps the country code when it is already there", () => {
+    expect(toWaNumber("+55 31 99999-9999")).toBe("5531999999999");
+  });
+  it("builds the universal wa.me URL with a digits-only phone", () => {
+    const url = waLink("+55 (31) 99999-9999", "Olá!");
+    expect(url).toBe("https://wa.me/5531999999999?text=Ol%C3%A1!");
+    expect(url).not.toMatch(/[+()\- ]/);
+  });
+  it("URL-encodes the message cleanly", () => {
+    const msg = "Plano Start — R$ 250/mês\nEmpresa: Clínica";
+    const url = waLink("31999999999", msg);
+    expect(url.startsWith("https://wa.me/5531999999999?text=")).toBe(true);
+    expect(url).toBe(`https://wa.me/5531999999999?text=${encodeURIComponent(msg)}`);
+    expect(url).not.toContain(" ");
+  });
+});
