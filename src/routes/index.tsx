@@ -270,7 +270,7 @@ function Simulator() {
               <Slider className="mt-5" min={MIN_PCS} max={MAX_PCS} step={1} value={[pcCount]} onValueChange={(v) => setPcCount(v[0] ?? MIN_PCS)} />
               <div className="mt-2 flex justify-between text-xs text-muted-foreground"><span>1</span><span>30</span></div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid items-start gap-4 sm:grid-cols-2">
               <OptionCard
                 icon={HardDrive}
                 title="Servidor Local / NAS de Arquivos"
@@ -364,7 +364,7 @@ function OptionCard({
       )}
     >
       <div className="flex gap-3">
-        <I className="h-5 w-5 text-primary" />
+        <I className="h-5 w-5 shrink-0 text-primary" />
         <div>
           <p className="flex items-center gap-1.5 font-medium">
             {title}
