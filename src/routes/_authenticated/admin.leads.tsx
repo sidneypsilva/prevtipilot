@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/admin/leads")({
   component: LeadsPage,
 });
 
-export const statusClass: Record<string, string> = {
+const statusClass: Record<string, string> = {
   "Novo Lead": "bg-primary/10 text-primary",
   "Em Contato": "bg-warning/15 text-foreground",
   "Visita Agendada": "bg-accent text-accent-foreground",
