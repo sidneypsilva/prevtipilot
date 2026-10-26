@@ -3,7 +3,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import {
-  AlertTriangle, ArrowRight, CheckCircle2, Clock, Cloud, HardDrive, Monitor, ShieldCheck,
+  AlertTriangle, ArrowRight, CheckCircle2, Clock, Cloud, HardDrive, Info, Monitor, ShieldCheck,
   Stethoscope, Scale, Wrench, XCircle, Activity, Star, MessageCircle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   BUSINESS_TYPES, CLOUD_BACKUP_PRICE, MAX_PCS, MIN_PCS, PRICE_PER_PC, SERVER_PRICE,
   calculateTotal, formatBRL, maskPhone, planItems, suggestPlan, waLink,
@@ -52,6 +53,7 @@ const nav = [
 
 function Landing() {
   return (
+    <TooltipProvider delayDuration={150}>
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
@@ -79,6 +81,7 @@ function Landing() {
         </div>
       </footer>
     </div>
+    </TooltipProvider>
   );
 }
 
@@ -271,11 +274,11 @@ function Simulator() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4 has-[:checked]:border-primary">
-                <div className="flex gap-3"><HardDrive className="h-5 w-5 text-primary" /><div><p className="font-medium">Servidor Local / NAS</p><p className="text-xs text-muted-foreground">+ {formatBRL(SERVER_PRICE)}/mês</p></div></div>
+                <div className="flex gap-3"><HardDrive className="h-5 w-5 text-primary" /><div><p className="flex items-center gap-1.5 font-medium">Servidor Local / NAS de Arquivos<InfoTip label="Servidor Local / NAS de Arquivos" text="Computador central ou aparelho de armazenamento que fica na rede da sua empresa, guardando os sistemas (prontuário, ERP, banco de dados) e os arquivos compartilhados. Monitoramos discos, memória, permissões e temperatura." /></p><p className="text-xs text-muted-foreground">+ {formatBRL(SERVER_PRICE)}/mês</p></div></div>
                 <Switch checked={hasServer} onCheckedChange={setHasServer} />
               </label>
               <label className="flex cursor-pointer items-start justify-between gap-3 rounded-xl border border-border p-4">
-                <div className="flex gap-3"><Cloud className="h-5 w-5 text-primary" /><div><p className="font-medium">Backup em Nuvem redundante</p><p className="text-xs text-muted-foreground">+ {formatBRL(CLOUD_BACKUP_PRICE)}/mês</p></div></div>
+                <div className="flex gap-3"><Cloud className="h-5 w-5 text-primary" /><div><p className="flex items-center gap-1.5 font-medium">Backup em Nuvem redundante<InfoTip label="Backup em Nuvem redundante" text="Cópias diárias e criptografadas dos seus dados guardadas em servidores seguros fora da empresa, em mais de um lugar ao mesmo tempo. Se o computador queimar, for roubado ou sofrer ransomware, você restaura tudo rapidamente." /></p><p className="text-xs text-muted-foreground">+ {formatBRL(CLOUD_BACKUP_PRICE)}/mês</p></div></div>
                 <Switch checked={hasCloudBackup} onCheckedChange={setHasCloudBackup} />
               </label>
             </div>
@@ -331,6 +334,32 @@ function Field({ label, error, children }: { label: string; error?: string | und
   );
 }
 
+/** Discreet help icon that explains a simulator option in a tooltip (hover, focus or tap). */
+function InfoTip({ label, text }: { label: string; text: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Tooltip open={open} onOpenChange={setOpen}>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={`O que é ${label}?`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpen((o) => !o);
+          }}
+          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-muted-foreground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+        >
+          <Info className="h-3.5 w-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" sideOffset={8} className="max-w-64 rounded-lg p-3 text-left leading-relaxed">
+        {text}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function Trust() {
   const t = [
     { n: "Dra. Mariana Lopes", r: "Clínica Odonto Sorriso", q: "Desde que a PrevTI assumiu, não perdemos mais nenhum dia de agenda por problema no computador." },
@@ -368,6 +397,8 @@ function Faq() {
     ["O diagnóstico inicial é realmente gratuito?", "Sim. Avaliamos sua estrutura e entregamos um relatório de riscos sem custo."],
     ["Vocês atendem presencialmente?", "Sim. O suporte remoto é ilimitado e os planos Pro e Corporate incluem visitas preventivas mensais."],
     ["Como funciona o backup em nuvem?", "Seus dados são copiados diariamente, criptografados, para dois datacenters distintos, e testamos a restauração mensalmente."],
+    ['O que é "Servidor Local / NAS de Arquivos"?', "É um computador central ou um aparelho de armazenamento dedicado que fica na rede da sua empresa. Nele ficam os sistemas que você usa no dia a dia (prontuário, ERP, banco de dados) ou é lá que os funcionários salvam e compartilham arquivos em rede. Quando você tem esse equipamento, o PrevTI acompanha a integridade dos discos, o uso de memória, as permissões de acesso e a temperatura dele, para que uma falha simples não derrube o trabalho de toda a equipe."],
+    ['O que é "Backup em Nuvem redundante"?', "É uma rotina automática que envia todos os dias cópias criptografadas dos seus dados importantes para servidores seguros fora da empresa (na nuvem). Redundante significa que essas cópias ficam guardadas em mais de um lugar ao mesmo tempo. Assim, se o computador principal queimar, for roubado ou sofrer um ataque de vírus (ransomware), você não perde o histórico de clientes nem os dados fiscais e consegue restaurar tudo rapidamente."],
     ["Atende às exigências da LGPD?", "Sim. Aplicamos boas práticas de segurança, controle de acesso e backup alinhadas à LGPD."],
   ];
   return (
