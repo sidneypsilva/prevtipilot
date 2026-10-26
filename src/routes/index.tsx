@@ -17,7 +17,6 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
   BUSINESS_TYPES, CLOUD_BACKUP_PRICE, MAX_PCS, MIN_PCS, PRICE_PER_PC, SERVER_PRICE,
@@ -54,7 +53,6 @@ const nav = [
 
 function Landing() {
   return (
-    <TooltipProvider delayDuration={150}>
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
@@ -82,7 +80,6 @@ function Landing() {
         </div>
       </footer>
     </div>
-    </TooltipProvider>
   );
 }
 
