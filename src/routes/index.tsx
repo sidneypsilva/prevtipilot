@@ -42,6 +42,7 @@ const leadSchema = z.object({
   contact_name: z.string().trim().min(2, "Informe seu nome").max(120),
   company_name: z.string().trim().min(2, "Informe a empresa").max(150),
   whatsapp: z.string().refine((v) => v.replace(/\D/g, "").length >= 10, "WhatsApp inválido"),
+  email: z.string().trim().toLowerCase().min(1, "Informe seu e-mail").max(255).email("E-mail inválido"),
   business_type: z.enum(BUSINESS_TYPES, { errorMap: () => ({ message: "Selecione o segmento" }) }),
 });
 
@@ -202,8 +203,8 @@ function Simulator() {
   const [pcCount, setPcCount] = useState(5);
   const [hasServer, setHasServer] = useState(false);
   const [hasCloudBackup, setHasCloudBackup] = useState(false);
-  const [form, setForm] = useState({ contact_name: "", company_name: "", whatsapp: "", business_type: "" });
-  const [errors, setErrors] = useState<Partial<Record<"contact_name" | "company_name" | "whatsapp" | "business_type", string>>>({});
+  const [form, setForm] = useState({ contact_name: "", company_name: "", whatsapp: "", email: "", business_type: "" });
+  const [errors, setErrors] = useState<Partial<Record<"contact_name" | "company_name" | "whatsapp" | "email" | "business_type", string>>>({});
   const [loading, setLoading] = useState(false);
   const [sentUrl, setSentUrl] = useState<string | null>(null);
 
@@ -238,7 +239,7 @@ function Simulator() {
       const msg = `${get("whatsapp_default_message")}\n\nEmpresa: ${parsed.data.company_name}\nContato: ${parsed.data.contact_name}\nSegmento: ${parsed.data.business_type}\nComputadores: ${pcCount}\nServidor/NAS: ${hasServer ? "Sim" : "Não"}\nBackup em nuvem: ${hasCloudBackup ? "Sim" : "Não"}\nPlano sugerido: ${plan} — ${formatBRL(total)}/mês`;
       const url = waLink(get("whatsapp_number") || "5531999999999", msg);
       setSentUrl(url);
-      setForm({ contact_name: "", company_name: "", whatsapp: "", business_type: "" });
+      setForm({ contact_name: "", company_name: "", whatsapp: "", email: "", business_type: "" });
     } catch {
       toast.error("Não foi possível enviar sua simulação. Tente novamente.");
     } finally {
@@ -295,6 +296,9 @@ function Simulator() {
               </Field>
               <Field label="WhatsApp" error={errors.whatsapp}>
                 <Input inputMode="tel" placeholder="(31) 99999-9999" value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: maskPhone(e.target.value) })} />
+              </Field>
+              <Field label="Seu e-mail" error={errors.email}>
+                <Input type="email" inputMode="email" autoComplete="email" placeholder="voce@suaempresa.com.br" maxLength={255} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
               </Field>
               <Field label="Segmento" error={errors.business_type}>
                 <Select value={form.business_type} onValueChange={(v) => setForm({ ...form, business_type: v })}>
