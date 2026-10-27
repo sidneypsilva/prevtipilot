@@ -149,7 +149,7 @@ function LeadsPage() {
                 {rows.map((l) => (
                   <TableRow key={l.id}>
                     <TableCell className="font-medium">{l.company_name}</TableCell>
-                    <TableCell><div>{l.contact_name}</div><div className="text-xs text-muted-foreground">{l.whatsapp}</div></TableCell>
+                    <TableCell><div>{l.contact_name}</div><div className="text-xs text-muted-foreground">{l.whatsapp}</div>{l.email && <div className="text-xs text-muted-foreground">{l.email}</div>}</TableCell>
                     <TableCell className="text-sm">{l.business_type}</TableCell>
                     <TableCell>{l.suggested_plan}</TableCell>
                     <TableCell>{formatBRL(Number(l.estimated_value ?? 0))}</TableCell>
