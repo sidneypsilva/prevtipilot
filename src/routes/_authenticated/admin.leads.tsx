@@ -170,19 +170,23 @@ function LeadsPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 overflow-x-auto pb-2 md:grid-cols-5">
+        <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-3 md:mx-0 md:px-0">
           {LEAD_STATUSES.map((s) => {
             const col = filtered.filter((l) => l.status === s);
+            const total = col.reduce((acc, l) => acc + Number(l.estimated_value ?? 0), 0);
             return (
               <div
                 key={s}
-                className="min-w-60 rounded-xl border border-border bg-muted/50 p-3"
+                className="w-72 shrink-0 snap-start rounded-xl border border-border bg-muted/50 p-3"
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => { const id = e.dataTransfer.getData("id"); if (id) updateStatus.mutate({ id, s }); }}
               >
-                <div className="mb-3 flex items-center justify-between">
-                  <Badge className={cn("border-0", statusClass[s])}>{s}</Badge>
-                  <span className="text-xs text-muted-foreground">{col.length}</span>
+                <div className="mb-3 space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge className={cn("border-0", statusClass[s])}>{s}</Badge>
+                    <span className="shrink-0 text-xs text-muted-foreground">{col.length} {col.length === 1 ? "lead" : "leads"}</span>
+                  </div>
+                  <p className="text-xs font-semibold text-foreground">{formatBRL(total)}/mês</p>
                 </div>
                 <div className="space-y-2">
                   {col.map((l) => (
