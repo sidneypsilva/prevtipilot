@@ -218,7 +218,7 @@ A aplicação possui dois ecossistemas integrados:
 | **Configurações** | Número de atendimento e canais de notificação. |
 
 <!-- Adicione os prints em docs/prints/ e descomente:
-![Landing Page](./docs/prints/01-landing-page.png)
+![Landing Page](./docs/<img width="2518" height="1382" alt="image" src="https://github.com/user-attachments/assets/86754171-8286-4345-8480-a120c8137fe6"/>)
 ![Simulador](./docs/prints/02-simulador.png)
 ![Funil de Leads](./docs/prints/03-admin-leads.png)
 ![Configurações](./docs/prints/04-configuracoes.png)
