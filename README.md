@@ -274,4 +274,4 @@ bunx vitest run
 
 ## 👤 Autor & Créditos
 
-Projeto concebido e desenvolvido por **Sidney Pereira da Silva** como parte do Desafio de Produto Digital da **Digital Innovation One (DIO)**, com apoio de IA (Gemini e Lovable).
+Projeto concebido e desenvolvido por **Sidney Pereira da Silva** como parte do Desafio de Produto Digital **MeuNegócio.AI: Construindo um Produto Digital com Agentes de IA e Lovable** da **DIO**, com apoio de IA (Gemini e Lovable).
