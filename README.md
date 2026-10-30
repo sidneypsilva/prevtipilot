@@ -217,12 +217,16 @@ A aplicação possui dois ecossistemas integrados:
 | **Agenda Técnica** | Visitas diagnósticas e preventivas vinculadas a clientes. |
 | **Configurações** | Número de atendimento e canais de notificação. |
 
-<!-- Adicione os prints em docs/prints/ e descomente:
-![Landing Page](./docs/<img width="2518" height="1382" alt="image" src="https://github.com/user-attachments/assets/86754171-8286-4345-8480-a120c8137fe6"/>)
-![Simulador](./docs/prints/02-simulador.png)
-![Funil de Leads](./docs/prints/03-admin-leads.png)
-![Configurações](./docs/prints/04-configuracoes.png)
--->
+<!-- Adicione os prints em docs/prints/ e descomente:-->
+#### Landing Page
+![Landing Page](https://github.com/user-attachments/assets/86754171-8286-4345-8480-a120c8137fe6/)
+#### Simulador de Planos
+![Simulador](https://github.com/user-attachments/assets/4a545b0c-b742-412a-a47c-80a28d54e9b8)
+#### Funil de Leads (Kanban)
+![Funil de Leads](https://github.com/user-attachments/assets/f502b59c-8406-406f-9929-a1fcc9cbca71)
+#### Configurações do Sistema
+![Configurações](https://github.com/user-attachments/assets/be94bcf4-dab2-41f2-a13b-dd7e49d39d5f)
+
 
 ---
 
