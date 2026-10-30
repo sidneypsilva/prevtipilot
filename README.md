@@ -204,6 +204,11 @@ A aplicação possui dois ecossistemas integrados:
 7. **Funil responsivo:** colunas de largura fixa com rolagem horizontal e total de R$/mês por etapa.
 8. **Blindagem RLS:** separação entre configurações públicas (WhatsApp) e privadas (e-mail do administrador).
 
+> 💡 **Documentação detalhada de Prompts:**
+> - 📄 [Mega Prompt v1.0 — MVP Inicial (Conceito Gemini)](./docs/prompts/mega-prompt-v1-mvp.md)
+> - 🚀 [Mega Prompt v2.0 — Versão Produção Atualizada](./docs/prompts/mega-prompt-v2-producao.md)
+> - 📊 [Ver Matriz Comparativa Completa](./docs/prompts/README.md)
+
 ---
 
 ## 📸 Demonstração & Telas do Sistema
